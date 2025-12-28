@@ -8,7 +8,7 @@
         <version>3.2.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
+    <groupId>com.randomproject</groupId>
     <artifactId>medium-poc</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>medium-poc</name>
