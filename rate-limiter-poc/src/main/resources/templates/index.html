@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Rate Limiter POC</title>
+    <style>
+        :root {
+            --ink: #0f172a;
+            --muted: #475569;
+            --accent: #0f766e;
+            --accent-dark: #115e59;
+            --warn: #b45309;
+            --bg: radial-gradient(circle at top right, rgba(204, 251, 241, 0.7), transparent 50%),
+                  radial-gradient(circle at 10% 20%, rgba(254, 215, 170, 0.6), transparent 45%),
+                  linear-gradient(160deg, #f8fafc 0%, #e2e8f0 100%);
+            --card: #ffffff;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Work Sans", "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+        h1, h2 {
+            font-family: "Fraunces", "Georgia", serif;
+        }
+        .page { max-width: 1150px; margin: 0 auto; padding: 32px 22px 60px; }
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 18px;
+            background: var(--card);
+            border-radius: 20px;
+            padding: 26px 28px;
+            box-shadow: 0 20px 48px rgba(15, 23, 42, 0.1);
+            animation: rise 0.6s ease;
+        }
+        .hero h1 { margin: 0 0 8px; font-size: 34px; }
+        .hero p { margin: 0; color: var(--muted); max-width: 520px; }
+        .pill {
+            align-self: flex-start;
+            background: #ecfeff;
+            color: #155e75;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .meta {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+        .grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 24px;
+        }
+        @media (min-width: 960px) {
+            .grid { grid-template-columns: 1.1fr 0.9fr; }
+        }
+        .card {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 22px 24px;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+            animation: rise 0.8s ease;
+        }
+        form { display: grid; gap: 12px; }
+        label { font-weight: 600; }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            font-size: 15px;
+        }
+        input:focus {
+            outline: 2px solid rgba(15, 118, 110, 0.25);
+            border-color: var(--accent);
+        }
+        button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        button:hover { background: var(--accent-dark); }
+        .reset button { background: #ef4444; }
+        .reset button:hover { background: #dc2626; }
+        .message {
+            margin-top: 18px;
+            background: #fef3c7;
+            border-left: 4px solid var(--warn);
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: #92400e;
+        }
+        .decision {
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 12px;
+            border: 1px solid transparent;
+        }
+        .decision.allow {
+            background: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        .decision.deny {
+            background: #fff7ed;
+            border-color: #fb923c;
+            color: #9a3412;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .stat {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 10px 12px;
+        }
+        .stat span { display: block; color: var(--muted); font-size: 12px; }
+        .stat strong { font-size: 18px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+        .empty { color: var(--muted); font-style: italic; }
+        .tag {
+            display: inline-block;
+            padding: 6px 10px;
+            background: #e0f2fe;
+            border-radius: 999px;
+            font-size: 12px;
+            color: #075985;
+            font-weight: 600;
+        }
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <div>
+            <h1>Rate Limiter POC</h1>
+            <p>Fixed-window limiter for simulating API throttling. Track per-key usage and inspect remaining capacity.</p>
+            <div class="meta">
+                Default policy:
+                <span th:text="${defaultLimit}">10</span> requests per
+                <span th:text="${defaultWindowSeconds}">60</span> seconds.
+            </div>
+        </div>
+        <div class="pill">UI + JSON API</div>
+    </header>
+
+    <div th:if="${message}" class="message" th:text="${message}"></div>
+
+    <div class="grid">
+        <section class="card">
+            <h2>Check a request</h2>
+            <form th:action="@{/check}" method="post">
+                <div>
+                    <label for="key">Client key</label>
+                    <input id="key" name="key" type="text" placeholder="client:alpha" maxlength="64" required>
+                </div>
+                <div>
+                    <label for="cost">Cost (tokens)</label>
+                    <input id="cost" name="cost" type="number" min="1" placeholder="1">
+                </div>
+                <div>
+                    <label for="limit">Limit (optional override)</label>
+                    <input id="limit" name="limit" type="number" min="1" th:placeholder="${defaultLimit}">
+                </div>
+                <div>
+                    <label for="windowSeconds">Window seconds (optional override)</label>
+                    <input id="windowSeconds" name="windowSeconds" type="number" min="1" th:placeholder="${defaultWindowSeconds}">
+                </div>
+                <div>
+                    <button type="submit">Evaluate request</button>
+                </div>
+            </form>
+
+            <div th:if="${decision}" class="decision" th:classappend="${decision.allowed} ? ' allow' : ' deny'">
+                <strong th:text="${decision.allowed} ? 'Allowed' : 'Limited'"></strong>
+                <span th:text="${decision.key}"></span>
+                <div class="stats">
+                    <div class="stat">
+                        <span>Remaining</span>
+                        <strong th:text="${decision.remaining}">0</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Used</span>
+                        <strong th:text="${decision.count}">0</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Window end</span>
+                        <strong th:text="${#temporals.format(decision.windowEnd, 'HH:mm:ss')}">00:00:00</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Policy</span>
+                        <strong th:text="${decision.limit} + ' / ' + ${decision.windowSeconds} + 's'">10 / 60s</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Active buckets</h2>
+            <div th:if="${#lists.isEmpty(buckets)}" class="empty">No traffic yet. Submit a request to open a bucket.</div>
+            <table th:if="${!#lists.isEmpty(buckets)}">
+                <thead>
+                <tr>
+                    <th>Key</th>
+                    <th>Remaining</th>
+                    <th>Used</th>
+                    <th>Window</th>
+                    <th>Resets</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="bucket : ${buckets}">
+                    <td><span class="tag" th:text="${bucket.key}">key</span></td>
+                    <td th:text="${bucket.remaining}">0</td>
+                    <td th:text="${bucket.count} + ' / ' + ${bucket.limit}">0 / 10</td>
+                    <td th:text="${bucket.windowSeconds} + 's'">60s</td>
+                    <td th:text="${#temporals.format(bucket.windowEnd, 'HH:mm:ss')}">00:00:00</td>
+                    <td>
+                        <form class="reset" th:action="@{'/buckets/' + ${bucket.key} + '/reset'}" method="post">
+                            <button type="submit">Reset</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+</body>
+</html>

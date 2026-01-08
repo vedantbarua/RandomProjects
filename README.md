@@ -57,3 +57,14 @@ In-memory key-value store with optional TTL and a simple UI.
 4. Open `http://localhost:8084`
 
 See [key-value-store-poc/README.md](key-value-store-poc/README.md) for endpoints and usage.
+
+### Rate Limiter POC
+Fixed-window rate limiter with UI and JSON endpoints.
+
+#### How to Run
+1. Ensure you have Java 17+ and Maven installed.
+2. Navigate to the project directory: `cd rate-limiter-poc`
+3. Run: `mvn org.springframework.boot:spring-boot-maven-plugin:run`
+4. Open `http://localhost:8085`
+
+See [rate-limiter-poc/README.md](rate-limiter-poc/README.md) for endpoints and usage.
