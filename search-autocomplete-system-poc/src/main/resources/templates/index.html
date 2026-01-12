@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Autocomplete System POC</title>
+    <style>
+        :root {
+            --ink: #1c1917;
+            --muted: #57534e;
+            --accent: #c2410c;
+            --accent-dark: #9a3412;
+            --accent-soft: #fed7aa;
+            --bg: radial-gradient(circle at 20% 20%, rgba(254, 215, 170, 0.6), transparent 45%),
+                  radial-gradient(circle at 80% 15%, rgba(252, 165, 165, 0.45), transparent 40%),
+                  linear-gradient(160deg, #fff7ed 0%, #f8fafc 100%);
+            --card: #ffffff;
+            --chip: #fef3c7;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: "Sora", "Segoe UI", sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+        h1, h2 {
+            font-family: "Fraunces", "Georgia", serif;
+        }
+        .page { max-width: 1150px; margin: 0 auto; padding: 32px 22px 60px; }
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 18px;
+            background: var(--card);
+            border-radius: 22px;
+            padding: 26px 28px;
+            box-shadow: 0 20px 48px rgba(28, 25, 23, 0.12);
+            animation: rise 0.6s ease;
+        }
+        .hero h1 { margin: 0 0 8px; font-size: 34px; }
+        .hero p { margin: 0; color: var(--muted); max-width: 520px; }
+        .pill {
+            align-self: flex-start;
+            background: var(--accent-soft);
+            color: #9a3412;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .meta {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+        .grid {
+            display: grid;
+            gap: 20px;
+            margin-top: 24px;
+        }
+        @media (min-width: 980px) {
+            .grid { grid-template-columns: 1.1fr 0.9fr; }
+        }
+        .card {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 22px 24px;
+            box-shadow: 0 14px 32px rgba(28, 25, 23, 0.08);
+            animation: rise 0.8s ease;
+        }
+        form { display: grid; gap: 12px; }
+        label { font-weight: 600; }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #d6d3d1;
+            font-size: 15px;
+        }
+        input:focus {
+            outline: 2px solid rgba(194, 65, 12, 0.2);
+            border-color: var(--accent);
+        }
+        button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        button:hover { background: var(--accent-dark); }
+        .ghost {
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
+        }
+        .message {
+            margin-top: 18px;
+            background: #fef3c7;
+            border-left: 4px solid var(--accent);
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: #9a3412;
+        }
+        .tag {
+            display: inline-block;
+            padding: 6px 10px;
+            background: var(--chip);
+            border-radius: 999px;
+            font-size: 12px;
+            color: #92400e;
+            font-weight: 600;
+        }
+        .list {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .list-item {
+            background: #fff7ed;
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: grid;
+            gap: 6px;
+        }
+        .list-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .muted { color: var(--muted); font-size: 13px; }
+        .empty { color: var(--muted); font-style: italic; }
+        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        th, td { padding: 10px 8px; text-align: left; border-bottom: 1px solid #e7e5e4; }
+        th { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <header class="hero">
+        <div>
+            <h1>Search Autocomplete System POC</h1>
+            <p>Prefix-powered suggestions with ranking by popularity and recency. Update terms, record selections, and browse the current index.</p>
+            <div class="meta">
+                Default limit: <span th:text="${defaultLimit}">8</span> suggestions.
+                Indexed prefixes up to <span th:text="${maxPrefixLength}">20</span> characters.
+            </div>
+        </div>
+        <div class="pill">UI + JSON API</div>
+    </header>
+
+    <div th:if="${message}" class="message" th:text="${message}"></div>
+
+    <div class="grid">
+        <section class="card">
+            <h2>Get suggestions</h2>
+            <form th:action="@{/suggest}" method="post">
+                <div>
+                    <label for="prefix">Prefix</label>
+                    <input id="prefix" name="prefix" type="text" placeholder="e.g. app" maxlength="80" th:value="${prefix}">
+                </div>
+                <div>
+                    <label for="limit">Limit</label>
+                    <input id="limit" name="limit" type="number" min="1" th:placeholder="${defaultLimit}" th:value="${limit}">
+                </div>
+                <div>
+                    <button type="submit">Fetch suggestions</button>
+                </div>
+            </form>
+
+            <div th:if="${suggestions}" class="list">
+                <div th:if="${#lists.isEmpty(suggestions)}" class="empty">No suggestions yet.</div>
+                <div th:each="suggestion : ${suggestions}" class="list-item">
+                    <div class="list-row">
+                        <strong th:text="${suggestion.term}">apple watch</strong>
+                        <span class="tag" th:text="'Score ' + ${suggestion.score}">Score 12</span>
+                    </div>
+                    <div class="list-row">
+                        <span class="muted" th:text="${suggestion.lastSelectedAt == null ? 'Never selected' : 'Last selected ' + #temporals.format(suggestion.lastSelectedAt, 'yyyy-MM-dd HH:mm')}">Never selected</span>
+                        <form th:action="@{/select}" method="post">
+                            <input type="hidden" name="term" th:value="${suggestion.term}">
+                            <button type="submit" class="ghost">Record selection</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Add or update terms</h2>
+            <form th:action="@{/terms}" method="post">
+                <div>
+                    <label for="term">Term</label>
+                    <input id="term" name="term" type="text" placeholder="e.g. ai product roadmap" maxlength="80" required>
+                </div>
+                <div>
+                    <label for="score">Initial score (optional)</label>
+                    <input id="score" name="score" type="number" min="0" placeholder="0">
+                </div>
+                <div>
+                    <button type="submit">Save term</button>
+                </div>
+            </form>
+
+            <h2 style="margin-top: 26px;">Top terms</h2>
+            <div th:if="${#lists.isEmpty(terms)}" class="empty">No terms yet.</div>
+            <table th:if="${!#lists.isEmpty(terms)}">
+                <thead>
+                <tr>
+                    <th>Term</th>
+                    <th>Score</th>
+                    <th>Last Selected</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="term : ${terms}">
+                    <td>
+                        <div th:text="${term.term}">apple watch</div>
+                        <div class="muted" th:text="${'Updated ' + #temporals.format(term.updatedAt, 'yyyy-MM-dd HH:mm')}">Updated</div>
+                    </td>
+                    <td th:text="${term.score}">12</td>
+                    <td th:text="${term.lastSelectedAt == null ? 'Never' : #temporals.format(term.lastSelectedAt, 'yyyy-MM-dd HH:mm')}">Never</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+</body>
+</html>
