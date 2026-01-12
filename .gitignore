@@ -35,3 +35,4 @@ replay_pid*
 target/
 
 
+*.DS_Store

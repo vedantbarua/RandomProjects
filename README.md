@@ -90,3 +90,25 @@ Snowflake-style unique ID generator with UI and JSON endpoints.
 4. Open `http://localhost:8087`
 
 See [unique-id-generator-in-distributed-systems-poc/README.md](unique-id-generator-in-distributed-systems-poc/README.md) for endpoints and usage.
+
+### Web Crawler POC
+Single-threaded web crawler with UI and JSON endpoints.
+
+#### How to Run
+1. Ensure Java 17+ and Maven are installed.
+2. Navigate to the project directory: `cd web-crawler-poc`
+3. Run: `mvn org.springframework.boot:spring-boot-maven-plugin:run`
+4. Open `http://localhost:8088`
+
+See [web-crawler-poc/README.md](web-crawler-poc/README.md) for endpoints and usage.
+
+### Search Autocomplete System POC
+Prefix-based autocomplete with ranking and an in-memory index.
+
+#### How to Run
+1. Ensure you have Java 17+ and Maven installed.
+2. Navigate to the project directory: `cd search-autocomplete-system-poc`
+3. Run: `mvn org.springframework.boot:spring-boot-maven-plugin:run`
+4. Open `http://localhost:8089`
+
+See [search-autocomplete-system-poc/README.md](search-autocomplete-system-poc/README.md) for endpoints and usage.
