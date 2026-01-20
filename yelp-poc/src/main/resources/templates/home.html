@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Yelp POC</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: radial-gradient(circle at top, #fff1e5 0%, #f8fafc 55%, #ffffff 100%);
+        }
+        .summary-card {
+            border: 0;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+        }
+        .business-card {
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 18px;
+        }
+        .badge-open {
+            background: #16a34a;
+        }
+        .badge-closed {
+            background: #475569;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+        <div>
+            <h1 class="display-6 fw-bold">Yelp POC</h1>
+            <p class="text-secondary mb-0">Discover local spots, browse reviews, and add new favorites.</p>
+        </div>
+        <a class="btn btn-dark btn-lg" href="/new">Add a business</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card summary-card p-3">
+                <div class="text-uppercase text-secondary small">Businesses</div>
+                <div class="fs-2 fw-semibold" th:text="${summary.totalBusinesses}">4</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card summary-card p-3">
+                <div class="text-uppercase text-secondary small">Total Reviews</div>
+                <div class="fs-2 fw-semibold" th:text="${summary.totalReviews}">9</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card summary-card p-3">
+                <div class="text-uppercase text-secondary small">Average Rating</div>
+                <div class="fs-2 fw-semibold">
+                    <span th:text="${#numbers.formatDecimal(summary.averageRating, 1, 1)}">4.6</span>
+                    <span class="fs-6 text-secondary">/ 5</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="h4 mb-0">Featured Businesses</h2>
+        <span class="text-secondary" th:text="${summary.totalBusinesses + ' spots'}">4 spots</span>
+    </div>
+
+    <div class="row g-3" th:if="${!businesses.isEmpty()}">
+        <div class="col-12" th:each="business : ${businesses}">
+            <div class="p-4 bg-white business-card">
+                <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+                    <div>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <span class="badge bg-dark" th:text="${business.category.label}">Cafe</span>
+                            <span class="badge bg-light text-dark border" th:text="${business.priceTier.label}">$$</span>
+                            <span class="badge text-white" th:classappend="${business.openNow} ? 'badge-open' : 'badge-closed'"
+                                  th:text="${business.openNow} ? 'Open now' : 'Closed'">Open now</span>
+                        </div>
+                        <h3 class="h5 mt-2 mb-1" th:text="${business.name}">Pine Street Cafe</h3>
+                        <div class="text-secondary">
+                            <span th:text="${business.neighborhood}">Downtown</span>
+                            <span class="mx-2">•</span>
+                            <span th:text="${business.address}">215 Pine Street</span>
+                        </div>
+                        <p class="text-secondary small mt-2" th:if="${business.description != null}" th:text="${business.description}">
+                            Latte flights, quiet booths, and a warm pastry case.
+                        </p>
+                    </div>
+                    <div class="text-lg-end">
+                        <div class="fs-4 fw-semibold" th:if="${business.reviewCount > 0}">
+                            <span th:text="${#numbers.formatDecimal(business.averageRating, 1, 1)}">4.7</span>
+                            <span class="fs-6 text-secondary">/ 5</span>
+                        </div>
+                        <div class="fs-5 fw-semibold" th:if="${business.reviewCount == 0}">New</div>
+                        <div class="text-secondary small" th:text="${business.reviewCount + ' reviews'}">2 reviews</div>
+                        <a class="btn btn-outline-dark btn-sm mt-2" th:href="@{'/business/' + ${business.id}}">View details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-light" th:if="${businesses.isEmpty()}">
+        No businesses yet. Add your first spot to get started.
+    </div>
+</div>
+</body>
+</html>
