@@ -178,3 +178,14 @@ Dispatch simulator with orders, drivers, and status updates.
 4. Open `http://localhost:8093`
 
 See [local-delivery-service-poc/README.md](local-delivery-service-poc/README.md) for endpoints and usage.
+
+### Yelp POC
+Local discovery app with businesses and reviews.
+
+#### How to Run
+1. Ensure you have Java 17+ and Maven installed.
+2. Navigate to the project directory: `cd yelp-poc`
+3. Run: `mvn org.springframework.boot:spring-boot-maven-plugin:run`
+4. Open `http://localhost:8095`
+
+See [yelp-poc/README.md](yelp-poc/README.md) for details.

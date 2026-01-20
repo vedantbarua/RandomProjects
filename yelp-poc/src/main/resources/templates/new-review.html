@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Review</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(180deg, #fff7f2 0%, #f8fafc 60%, #ffffff 100%);
+        }
+        .form-card {
+            border: 0;
+            box-shadow: 0 15px 40px rgba(15, 23, 42, 0.12);
+        }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <a class="text-decoration-none text-secondary" th:href="@{'/business/' + ${business.id}}">&larr; Back to business</a>
+
+    <div class="card form-card mt-3 p-4">
+        <h1 class="h3 fw-bold mb-1">Write a review</h1>
+        <p class="text-secondary" th:text="${business.name}">Pine Street Cafe</p>
+
+        <form th:action="@{'/business/' + ${business.id} + '/reviews'}" th:object="${reviewForm}" method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Your Name</label>
+                <input type="text" class="form-control" th:field="*{reviewerName}" placeholder="Jordan Kim">
+                <div class="text-danger small" th:if="${#fields.hasErrors('reviewerName')}" th:errors="*{reviewerName}"></div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Rating</label>
+                <select class="form-select" th:field="*{rating}">
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                    <option value="2">2</option>
+                    <option value="1">1</option>
+                </select>
+                <div class="text-danger small" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Visited On</label>
+                <input type="date" class="form-control" th:field="*{visitedOn}">
+                <div class="text-danger small" th:if="${#fields.hasErrors('visitedOn')}" th:errors="*{visitedOn}"></div>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Review</label>
+                <textarea class="form-control" rows="4" th:field="*{comment}" placeholder="What stood out?"></textarea>
+                <div class="text-danger small" th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></div>
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+                <button class="btn btn-dark" type="submit">Submit review</button>
+                <a class="btn btn-outline-secondary" th:href="@{'/business/' + ${business.id}}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

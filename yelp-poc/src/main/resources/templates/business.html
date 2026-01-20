@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${business.name + ' | Yelp POC'}">Business Details</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(180deg, #fdf4ef 0%, #f8fafc 60%, #ffffff 100%);
+        }
+        .info-card {
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 18px;
+        }
+        .review-card {
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <a class="text-decoration-none text-secondary" href="/">&larr; Back to list</a>
+
+    <div class="row g-4 mt-2">
+        <div class="col-lg-7">
+            <div class="p-4 bg-white info-card">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <span class="badge bg-dark" th:text="${business.category.label}">Cafe</span>
+                    <span class="badge bg-light text-dark border" th:text="${business.priceTier.label}">$$</span>
+                    <span class="badge" th:classappend="${business.openNow} ? 'bg-success' : 'bg-secondary'"
+                          th:text="${business.openNow} ? 'Open now' : 'Closed'">Open now</span>
+                </div>
+                <h1 class="display-6 fw-bold mt-2" th:text="${business.name}">Pine Street Cafe</h1>
+                <p class="text-secondary mb-1" th:text="${business.neighborhood}">Downtown</p>
+                <p class="text-secondary mb-3" th:text="${business.address}">215 Pine Street</p>
+                <p class="text-secondary" th:if="${business.description != null}" th:text="${business.description}">
+                    Latte flights, quiet booths, and a warm pastry case.
+                </p>
+                <div class="d-flex flex-wrap gap-3 text-secondary">
+                    <div th:if="${business.phone != null}">Phone: <span th:text="${business.phone}">555-0142</span></div>
+                    <div>Reviews: <span th:text="${business.reviewCount}">2</span></div>
+                    <div th:if="${business.reviewCount > 0}">
+                        Rating: <span th:text="${#numbers.formatDecimal(business.averageRating, 1, 1)}">4.5</span> / 5
+                    </div>
+                    <div th:if="${business.reviewCount == 0}">Rating: New</div>
+                </div>
+                <div class="mt-4">
+                    <a class="btn btn-dark" th:href="@{'/business/' + ${business.id} + '/review'}">Write a review</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="p-4 bg-white info-card">
+                <h2 class="h5 mb-3">Review Highlights</h2>
+                <div class="text-secondary" th:if="${business.reviewCount == 0}">
+                    Be the first to leave a review.
+                </div>
+                <div class="mb-3" th:if="${business.reviewCount > 0}">
+                    <div class="display-6 fw-semibold" th:text="${#numbers.formatDecimal(business.averageRating, 1, 1)}">4.6</div>
+                    <div class="text-secondary">Average rating based on <span th:text="${business.reviewCount}">2</span> reviews.</div>
+                </div>
+                <div class="d-grid">
+                    <a class="btn btn-outline-dark" th:href="@{'/business/' + ${business.id} + '/review'}">Add your review</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <h2 class="h4 mb-3">Recent Reviews</h2>
+        <div class="row g-3" th:if="${!business.reviews.isEmpty()}">
+            <div class="col-12" th:each="review : ${business.reviews}">
+                <div class="p-4 bg-white review-card">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
+                        <div>
+                            <div class="fw-semibold" th:text="${review.reviewerName}">Lena M.</div>
+                            <div class="text-secondary small" th:text="${#temporals.format(review.visitedOn, 'MMM d, yyyy')}">
+                                Aug 10, 2024
+                            </div>
+                        </div>
+                        <div class="fw-semibold">Rating: <span th:text="${review.rating}">5</span> / 5</div>
+                    </div>
+                    <p class="mt-2 mb-0" th:text="${review.comment}">Perfect cappuccino and fast Wi-Fi.</p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-light" th:if="${business.reviews.isEmpty()}">
+            No reviews yet. Add a review to help others decide.
+        </div>
+    </div>
+</div>
+</body>
+</html>
