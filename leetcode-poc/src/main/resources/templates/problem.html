@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${problem.title} + ' | LeetCode POC'">Problem</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 45%, #ffffff 100%);
+        }
+        .card-shell {
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 20px;
+        }
+        .badge-easy { background: #16a34a; }
+        .badge-medium { background: #f59e0b; }
+        .badge-hard { background: #ef4444; }
+    </style>
+</head>
+<body>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a class="text-decoration-none text-secondary" href="/">&lt;- Back to board</a>
+            <h1 class="display-6 fw-bold mt-2" th:text="${problem.title}">Two Sum</h1>
+        </div>
+        <a class="btn btn-dark btn-lg" th:href="@{'/problem/' + ${problem.id} + '/attempt'}">Log attempt</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-4">
+            <div class="card card-shell p-4">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge text-white" th:classappend="${problem.difficulty.badgeClass}" th:text="${problem.difficulty.label}">Easy</span>
+                    <span class="badge bg-light text-dark border" th:text="${problem.status.label}">Solved</span>
+                </div>
+                <div class="text-secondary small mb-2">Slug</div>
+                <div class="fw-semibold" th:text="${problem.slug}">two-sum</div>
+                <div class="text-secondary small mt-3">Created</div>
+                <div class="fw-semibold" th:text="${problem.createdOn}">2024-01-01</div>
+                <div class="text-secondary small mt-3" th:if="${problem.solvedOn != null}">Solved On</div>
+                <div class="fw-semibold" th:if="${problem.solvedOn != null}" th:text="${problem.solvedOn}">2024-01-02</div>
+                <div class="text-secondary small mt-3" th:if="${problem.url != null}">Problem Link</div>
+                <a class="fw-semibold" th:if="${problem.url != null}" th:href="${problem.url}" target="_blank" rel="noopener" th:text="${problem.url}">Link</a>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card card-shell p-4 mb-4">
+                <h2 class="h5">Tags</h2>
+                <div class="d-flex flex-wrap gap-2" th:if="${!problem.tags.isEmpty()}">
+                    <span class="badge bg-dark" th:each="tag : ${problem.tags}" th:text="${tag}">arrays</span>
+                </div>
+                <div class="text-secondary" th:if="${problem.tags.isEmpty()}">No tags yet.</div>
+
+                <h2 class="h5 mt-4">Notes</h2>
+                <p class="text-secondary" th:if="${problem.notes != null}" th:text="${problem.notes}">Remember edge cases.</p>
+                <div class="text-secondary" th:if="${problem.notes == null}">No notes yet.</div>
+            </div>
+
+            <div class="card card-shell p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h5 mb-0">Attempts</h2>
+                    <span class="text-secondary" th:text="${problem.attemptCount + ' total'}">2 total</span>
+                </div>
+                <div class="table-responsive" th:if="${!problem.attempts.isEmpty()}">
+                    <table class="table align-middle">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Outcome</th>
+                            <th>Runtime</th>
+                            <th>Memory</th>
+                            <th>Duration</th>
+                            <th>Language</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="attempt : ${problem.attempts}">
+                            <td th:text="${attempt.attemptedOn}">2024-01-01</td>
+                            <td th:text="${attempt.outcome.label}">Accepted</td>
+                            <td th:text="${attempt.runtimeMs != null} ? attempt.runtimeMs + ' ms' : '-'">23 ms</td>
+                            <td th:text="${attempt.memoryMb != null} ? attempt.memoryMb + ' MB' : '-'">35 MB</td>
+                            <td th:text="${attempt.durationMinutes != null} ? attempt.durationMinutes + ' min' : '-'">25 min</td>
+                            <td th:text="${attempt.language != null} ? attempt.language : '-'">Java</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-secondary" th:if="${problem.attempts.isEmpty()}">
+                    No attempts yet. Log your first try.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
