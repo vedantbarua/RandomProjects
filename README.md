@@ -255,3 +255,14 @@ Streaming catalog with recommendations, watchlists, and playback tracking.
 4. Open `http://localhost:8100`
 
 See [netflix-poc/README.md](netflix-poc/README.md) for details.
+
+### LeetCode POC
+Problem tracker with attempts, outcomes, and difficulty filters.
+
+#### How to Run
+1. Ensure you have Java 17+ and Maven installed.
+2. Navigate to the project directory: `cd leetcode-poc`
+3. Run: `mvn org.springframework.boot:spring-boot-maven-plugin:run`
+4. Open `http://localhost:8101`
+
+See [leetcode-poc/README.md](leetcode-poc/README.md) for details.
