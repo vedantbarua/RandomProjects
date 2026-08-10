@@ -1,0 +1,429 @@
+:root {
+  color: #182024;
+  background: #eef2f3;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+h2,
+p {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding-bottom: 32px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 72px;
+  padding: 14px clamp(16px, 4vw, 52px);
+  border-bottom: 1px solid #d6e1e5;
+  background: rgba(249, 251, 252, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.brand,
+.top-actions,
+.control-row,
+.panel-head,
+.metric,
+.task-list article,
+.timeline article,
+.queue-list article {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #ffffff;
+  background: #27505c;
+}
+
+.brand div,
+.panel-head div,
+.task-form,
+.task-form label,
+.plan-panel,
+.queue-panel,
+.task-list,
+.event-list,
+.queue-list,
+.timeline,
+.overflow-box {
+  display: grid;
+  gap: 10px;
+}
+
+small,
+.muted,
+.task-list span,
+.timeline span,
+.event-list span,
+.event-list small {
+  color: #65787f;
+}
+
+button,
+.task-list select {
+  min-height: 38px;
+  border: 1px solid #c7d8dd;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #243f46;
+  background: #ffffff;
+}
+
+.top-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.top-actions button,
+.control-row button,
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.status-grid,
+.workspace,
+.lower-grid {
+  width: min(1500px, calc(100% - 32px));
+  margin: 20px auto 0;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric {
+  min-height: 106px;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: center;
+  padding: 18px;
+  border: 1px solid #d6e1e5;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.metric svg {
+  color: #2d6970;
+}
+
+.metric strong {
+  font-size: 32px;
+}
+
+.metric.ok svg {
+  color: #24734f;
+}
+
+.metric.warn svg {
+  color: #9d5c1d;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr) 320px;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  border: 1px solid #d6e1e5;
+  border-radius: 8px;
+  padding: 18px;
+  background: #ffffff;
+}
+
+.panel h2,
+.panel-head {
+  color: #27505c;
+}
+
+.panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 20px;
+}
+
+.task-form input,
+.task-form select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #cfdde2;
+  border-radius: 8px;
+  padding: 0 10px;
+  color: #182024;
+  background: #f7fafb;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.primary {
+  color: #ffffff;
+  border-color: #27505c;
+  background: #27505c;
+}
+
+.control-row {
+  flex-wrap: wrap;
+}
+
+.control-row button {
+  flex: 1 1 130px;
+}
+
+.panel-head {
+  justify-content: space-between;
+}
+
+meter {
+  width: 100%;
+  height: 12px;
+}
+
+.badge,
+.priority {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0 9px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.badge.ok {
+  color: #1e5b43;
+  background: #ddf1e8;
+}
+
+.badge.warn {
+  color: #7a4216;
+  background: #faead9;
+}
+
+.timeline article {
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 13px;
+  border: 1px solid #dfe8eb;
+  border-radius: 8px;
+  background: #f7fafb;
+}
+
+.timeline time {
+  min-width: 112px;
+  color: #2d6970;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.timeline div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+  flex: 1;
+}
+
+.priority.urgent {
+  color: #7a1f1f;
+  background: #fde2e2;
+}
+
+.priority.high {
+  color: #7a4216;
+  background: #faead9;
+}
+
+.priority.medium {
+  color: #255765;
+  background: #deedf2;
+}
+
+.priority.low {
+  color: #3d5f33;
+  background: #e2f0dc;
+}
+
+.overflow-box {
+  padding: 12px;
+  border: 1px solid #efc99f;
+  border-radius: 8px;
+  color: #6b3b13;
+  background: #fff6ec;
+}
+
+.overflow-box span {
+  line-height: 1.4;
+}
+
+.queue-list article {
+  align-items: flex-start;
+  padding: 11px;
+  border: 1px solid #dfe8eb;
+  border-radius: 8px;
+  background: #f7fafb;
+}
+
+.queue-list div {
+  display: grid;
+  gap: 3px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 5px;
+  border-radius: 999px;
+  background: #8a9aa0;
+}
+
+.dot.queued {
+  background: #2d6970;
+}
+
+.dot.dispatched {
+  background: #24734f;
+}
+
+.dot.cancelled {
+  background: #a44f4f;
+}
+
+.lower-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr);
+  gap: 16px;
+}
+
+.task-list article {
+  min-height: 64px;
+  justify-content: space-between;
+  padding: 12px;
+  border: 1px solid #dfe8eb;
+  border-radius: 8px;
+  background: #f7fafb;
+}
+
+.task-list article > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.task-list strong,
+.timeline strong {
+  overflow-wrap: anywhere;
+}
+
+.task-list select {
+  width: 122px;
+}
+
+.event-list {
+  max-height: 430px;
+  overflow: auto;
+}
+
+.event-list article {
+  display: grid;
+  gap: 3px;
+  padding: 10px 0;
+  border-bottom: 1px solid #e4ecef;
+}
+
+.event-list article:last-child {
+  border-bottom: 0;
+}
+
+@media (max-width: 1180px) {
+  .status-grid,
+  .workspace,
+  .lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar,
+  .timeline article,
+  .task-list article {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .top-actions,
+  .panel-head {
+    justify-content: flex-start;
+  }
+
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .task-list select {
+    width: 100%;
+  }
+}
