@@ -50,6 +50,37 @@ type ApiProgress = {
   notes: string;
   streak: number;
 };
+type AssessmentQuestion = {
+  id: string;
+  stepId: string;
+  topic: string;
+  type: "multiple" | "short" | "explain";
+  prompt: string;
+  choices: string[];
+  answer: string;
+};
+type AssessmentAttempt = {
+  id: number;
+  stepId: string;
+  score: number;
+  total: number;
+  percent: number;
+  weakTopics: string[];
+  recommendation: string;
+  createdAt: string;
+};
+type AssessmentPayload = {
+  stepId: string;
+  questions: AssessmentQuestion[];
+  latestAttempt: AssessmentAttempt | null;
+};
+type MasterySummary = {
+  averageMastery: number;
+  attemptedSteps: number;
+  latestAttempts: AssessmentAttempt[];
+  weakTopics: { topic: string; count: number }[];
+  nextAction: string;
+};
 
 const steps: Step[] = [
   {
@@ -226,6 +257,40 @@ const habits = [
   "Build small notebooks once you reach ML topics."
 ];
 
+const assessmentSeedQuestions: AssessmentQuestion[] = steps.flatMap((step) => {
+  const choices = Array.from(new Set([step.topics[0], ...step.topics.slice(1, 4), "skip practice"])).slice(0, 4);
+  const resourceChoices = Array.from(new Set([step.resources[0].label, ...step.resources.slice(1).map((resource) => resource.label), "No practice needed"])).slice(0, 4);
+  return [
+    {
+      id: `${step.id}-anchor-topic`,
+      stepId: step.id,
+      topic: step.topics[0],
+      type: "multiple",
+      prompt: `Which topic anchors ${step.title}?`,
+      choices,
+      answer: step.topics[0]
+    },
+    {
+      id: `${step.id}-first-resource`,
+      stepId: step.id,
+      topic: step.resources[0].role,
+      type: "multiple",
+      prompt: `Which resource should you start with for ${step.title}?`,
+      choices: resourceChoices,
+      answer: step.resources[0].label
+    },
+    {
+      id: `${step.id}-explain-why`,
+      stepId: step.id,
+      topic: "concept explanation",
+      type: "explain",
+      prompt: `Explain why ${step.title} belongs at this point in the roadmap.`,
+      choices: [],
+      answer: step.whyNow
+    }
+  ];
+});
+
 const userId = "demo-learner";
 
 export default function App() {
@@ -241,6 +306,10 @@ export default function App() {
   const [isHydrated, setIsHydrated] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [apiError, setApiError] = useState("");
+  const [assessment, setAssessment] = useState<AssessmentPayload | null>(null);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [mastery, setMastery] = useState<MasterySummary | null>(null);
+  const [isSubmittingAssessment, setIsSubmittingAssessment] = useState(false);
 
   const active = steps.find((step) => step.id === activeId) || steps[0];
   const filteredSteps = useMemo(() => {
@@ -258,17 +327,31 @@ export default function App() {
 
     async function loadBackendState() {
       try {
-        const [healthRes, progressRes, planRes] = await Promise.all([
+        const [healthRes, progressRes, planRes, seedRes] = await Promise.all([
           fetch("/api/health"),
           fetch(`/api/progress/${userId}`),
-          fetch(`/api/plan/${userId}`)
+          fetch(`/api/plan/${userId}`),
+          fetch("/api/assessments/seed", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ questions: assessmentSeedQuestions })
+          })
         ]);
-        if (!healthRes.ok || !progressRes.ok || !planRes.ok) {
+        if (!healthRes.ok || !progressRes.ok || !planRes.ok || !seedRes.ok) {
           throw new Error("Backend returned an error");
         }
         const health = await healthRes.json() as ApiStatus;
         const progress = await progressRes.json() as ApiProgress;
         const savedPlan = await planRes.json() as { plan: WeeklyPlanItem[] };
+        const [assessmentRes, masteryRes] = await Promise.all([
+          fetch(`/api/assessments/${userId}/${progress.activeId}`),
+          fetch(`/api/mastery/${userId}`)
+        ]);
+        if (!assessmentRes.ok || !masteryRes.ok) {
+          throw new Error("Learning analytics unavailable");
+        }
+        const activeAssessment = await assessmentRes.json() as AssessmentPayload;
+        const masterySummary = await masteryRes.json() as MasterySummary;
         if (ignore) return;
         setApiStatus(health);
         setActiveId(progress.activeId);
@@ -278,6 +361,8 @@ export default function App() {
         setNotes(progress.notes);
         setStreak(progress.streak);
         setWeeklyPlan(savedPlan.plan || []);
+        setAssessment(activeAssessment);
+        setMastery(masterySummary);
         setApiError("");
       } catch (error) {
         if (!ignore) setApiError(error instanceof Error ? error.message : "Backend unavailable");
@@ -291,6 +376,29 @@ export default function App() {
       ignore = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!isHydrated) return;
+    const controller = new AbortController();
+    setAnswers({});
+
+    async function loadAssessment() {
+      try {
+        const res = await fetch(`/api/assessments/${userId}/${activeId}`, { signal: controller.signal });
+        if (!res.ok) throw new Error("Assessment unavailable");
+        const payload = await res.json() as AssessmentPayload;
+        setAssessment(payload);
+        setApiError("");
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          setApiError(error instanceof Error ? error.message : "Assessment unavailable");
+        }
+      }
+    }
+
+    loadAssessment();
+    return () => controller.abort();
+  }, [activeId, isHydrated]);
 
   useEffect(() => {
     if (!isHydrated) return;
@@ -352,6 +460,28 @@ export default function App() {
       setApiError(error instanceof Error ? error.message : "Plan generation failed");
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function submitActiveAssessment() {
+    if (!assessment || assessment.questions.length === 0) return;
+    setIsSubmittingAssessment(true);
+    try {
+      const res = await fetch(`/api/assessments/${userId}/${active.id}/submit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers })
+      });
+      if (!res.ok) throw new Error("Assessment submission failed");
+      const payload = await res.json() as { attempt: AssessmentAttempt; mastery: MasterySummary };
+      setAssessment((current) => current ? { ...current, latestAttempt: payload.attempt } : current);
+      setMastery(payload.mastery);
+      setAnswers({});
+      setApiError("");
+    } catch (error) {
+      setApiError(error instanceof Error ? error.message : "Assessment submission failed");
+    } finally {
+      setIsSubmittingAssessment(false);
     }
   }
 
@@ -446,10 +576,67 @@ export default function App() {
                 <span>{notes.length} chars</span>
               </div>
             </Panel>
+            <Panel title="Assessment" icon={GraduationCap} wide>
+              <div className="assessment-panel">
+                <div className="assessment-head">
+                  <div>
+                    <strong>{assessment?.latestAttempt ? `${assessment.latestAttempt.percent}% mastery` : "No attempt yet"}</strong>
+                    <span>{assessment?.latestAttempt ? assessment.latestAttempt.recommendation : "Answer the checkpoint questions to find weak topics before moving ahead."}</span>
+                  </div>
+                  {assessment?.latestAttempt ? <meter min="0" max="100" value={assessment.latestAttempt.percent} /> : null}
+                </div>
+                <div className="question-list">
+                  {(assessment?.questions || []).map((question, index) => (
+                    <article className="question-card" key={question.id}>
+                      <small>Question {index + 1} · {question.topic}</small>
+                      <strong>{question.prompt}</strong>
+                      {question.choices.length > 0 ? (
+                        <div className="choice-grid">
+                          {question.choices.map((choice) => (
+                            <button
+                              className={answers[question.id] === choice ? "active" : ""}
+                              key={choice}
+                              onClick={() => setAnswers((current) => ({ ...current, [question.id]: choice }))}
+                            >
+                              {choice}
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <textarea
+                          value={answers[question.id] || ""}
+                          onChange={(event) => setAnswers((current) => ({ ...current, [question.id]: event.target.value }))}
+                          placeholder="Explain the idea in your own words"
+                        />
+                      )}
+                    </article>
+                  ))}
+                </div>
+                <button className="assessment-submit" disabled={!assessment || assessment.questions.length === 0 || isSubmittingAssessment} onClick={submitActiveAssessment}>
+                  {isSubmittingAssessment ? "Submitting" : "Submit assessment"}
+                </button>
+              </div>
+            </Panel>
           </div>
         </section>
 
         <aside className="side">
+          <Panel title="Mastery" icon={Trophy}>
+            <div className="mastery-panel">
+              <div className="mastery-score">
+                <strong>{mastery?.averageMastery ?? 0}%</strong>
+                <span>{mastery?.attemptedSteps ?? 0} assessed steps</span>
+              </div>
+              <meter min="0" max="100" value={mastery?.averageMastery ?? 0} />
+              <p className="body-copy">{mastery?.nextAction || "Take an assessment to unlock mastery analytics."}</p>
+              <div className="mastery-list">
+                <small>Weak topics</small>
+                {mastery && mastery.weakTopics.length > 0 ? mastery.weakTopics.map((topic) => (
+                  <span key={topic.topic}>{topic.topic}<strong>{topic.count}</strong></span>
+                )) : <p className="body-copy">No weak topics recorded.</p>}
+              </div>
+            </div>
+          </Panel>
           <Panel title="Weekly Plan" icon={CalendarDays}>
             <div className="weekly-plan">
               <button onClick={generatePlan}>{weeklyPlan.length > 0 ? "Regenerate plan" : "Generate plan"}</button>

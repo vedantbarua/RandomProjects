@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import { createCache } from "./cache.js";
 import { generateWeeklyPlan } from "./planner.js";
-import { getProgress, getWeeklyPlan, saveProgress, saveWeeklyPlan } from "./db.js";
+import { getAssessment, getMasterySummary, getProgress, getWeeklyPlan, saveProgress, saveWeeklyPlan, seedAssessmentQuestions, submitAssessment } from "./db.js";
 
 const app = express();
 const port = Number(process.env.PORT || 4360);
@@ -42,6 +42,30 @@ app.post("/api/plan/:userId", (req, res) => {
   res.json(saveWeeklyPlan(req.params.userId, plan));
 });
 
+app.post("/api/assessments/seed", (req, res) => {
+  seedAssessmentQuestions(req.body.questions);
+  res.json({ ok: true });
+});
+
+app.get("/api/assessments/:userId/:stepId", (req, res) => {
+  res.json(getAssessment(req.params.userId, req.params.stepId));
+});
+
+app.post("/api/assessments/:userId/:stepId/submit", async (req, res) => {
+  const attempt = submitAssessment(req.params.userId, req.params.stepId, req.body.answers);
+  const mastery = getMasterySummary(req.params.userId);
+  await cache.set(masteryKey(req.params.userId), JSON.stringify(mastery), 900);
+  res.json({ attempt, mastery });
+});
+
+app.get("/api/mastery/:userId", async (req, res) => {
+  const cached = await cache.get(masteryKey(req.params.userId));
+  if (cached) return res.json(JSON.parse(cached));
+  const mastery = getMasterySummary(req.params.userId);
+  await cache.set(masteryKey(req.params.userId), JSON.stringify(mastery), 900);
+  res.json(mastery);
+});
+
 app.use((err, _req, res, _next) => {
   res.status(500).json({ ok: false, error: err.message || "Internal server error" });
 });
@@ -61,4 +85,8 @@ async function shutdown() {
 
 function streakKey(userId) {
   return `streak:${userId}`;
+}
+
+function masteryKey(userId) {
+  return `mastery:${userId}`;
 }
