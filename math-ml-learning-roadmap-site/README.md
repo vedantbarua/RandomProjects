@@ -28,6 +28,8 @@ Interactive learning roadmap for studying math foundations, intuition-first visu
 - Direct links to Khan Academy, 3Blue1Brown, MIT OCW, DeepLearning.AI, and Coursera resources
 - Study notes for the active step
 - Checkpoints and topic tags for each phase
+- Active-step assessments with multiple-choice and written explanation questions
+- Mastery analytics with weak-topic detection and next-action guidance
 - Responsive React + TypeScript implementation
 
 ## Run Locally
@@ -63,6 +65,10 @@ REDIS_URL=redis://127.0.0.1:6379 npm run dev:api
 - `PUT /api/progress/:userId`
 - `GET /api/plan/:userId`
 - `POST /api/plan/:userId`
+- `POST /api/assessments/seed`
+- `GET /api/assessments/:userId/:stepId`
+- `POST /api/assessments/:userId/:stepId/submit`
+- `GET /api/mastery/:userId`
 
 ## Build
 

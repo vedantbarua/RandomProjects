@@ -458,9 +458,140 @@ h1 {
   font-size: 13px;
 }
 
+.assessment-panel,
+.question-list,
+.question-card,
+.mastery-panel,
+.mastery-list {
+  display: grid;
+  gap: 12px;
+}
+
+.assessment-head,
+.mastery-score,
+.mastery-list > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.assessment-head {
+  padding: 14px;
+  border: 1px solid #dfe8ec;
+  border-radius: 8px;
+  background: #f7fafb;
+}
+
+.assessment-head > div,
+.mastery-score {
+  display: grid;
+  gap: 4px;
+}
+
+.assessment-head strong,
+.mastery-score strong {
+  color: #172025;
+  font-size: 24px;
+}
+
+.assessment-head span,
+.mastery-score span {
+  color: #5f727a;
+  line-height: 1.45;
+}
+
+.assessment-head meter,
+.mastery-panel meter {
+  width: min(180px, 100%);
+  height: 12px;
+}
+
+.question-list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.question-card {
+  align-content: start;
+  min-height: 230px;
+  padding: 14px;
+  border: 1px solid #dfe8ec;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.question-card strong {
+  line-height: 1.35;
+}
+
+.choice-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.choice-grid button,
+.assessment-submit {
+  min-height: 38px;
+  border: 1px solid #cbdce1;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #244046;
+  background: #f7fafb;
+  text-align: left;
+}
+
+.choice-grid button.active {
+  border-color: #8cc1bc;
+  background: #dff1ed;
+  font-weight: 800;
+}
+
+.question-card textarea {
+  width: 100%;
+  min-height: 106px;
+  resize: vertical;
+  border: 1px solid #dfe8ec;
+  border-radius: 8px;
+  padding: 12px;
+  color: #172025;
+  background: #f7fafb;
+  line-height: 1.5;
+}
+
+.assessment-submit {
+  width: fit-content;
+  min-width: 180px;
+  color: #fbfcfd;
+  background: #284f58;
+  text-align: center;
+}
+
 .side {
   display: grid;
   gap: 16px;
+}
+
+.mastery-score {
+  grid-template-columns: 1fr auto;
+}
+
+.mastery-list > small {
+  color: #284f58;
+  font-weight: 800;
+}
+
+.mastery-list > span {
+  min-height: 36px;
+  padding: 8px 10px;
+  border: 1px solid #dfe8ec;
+  border-radius: 8px;
+  color: #244046;
+  background: #f7fafb;
+}
+
+.mastery-list strong {
+  min-width: 26px;
+  text-align: right;
 }
 
 .check {
@@ -523,7 +654,8 @@ h1 {
   .hero,
   .workspace,
   .metrics,
-  .resource-grid {
+  .resource-grid,
+  .question-list {
     grid-template-columns: 1fr;
   }
 
