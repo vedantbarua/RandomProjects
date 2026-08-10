@@ -2,7 +2,7 @@
 
 Proof-of-concepts for distributed systems, infrastructure patterns, and product-style architectures. This repository is meant to read like a working systems portfolio, not just a list of folders.
 
-There are currently `134` POCs here. Some are infrastructure primitives, some are realtime systems, and some are end-user product simulations. The common goal is the same: make the underlying system behavior visible enough that someone can understand the design tradeoffs quickly.
+There are currently `135` POCs here. Some are infrastructure primitives, some are realtime systems, and some are end-user product simulations. The common goal is the same: make the underlying system behavior visible enough that someone can understand the design tradeoffs quickly.
 
 ## What Makes This Repo Useful
 
@@ -56,6 +56,7 @@ If a reviewer only opens a dozen projects, these are the best entry points.
 | [notification-system-poc](notification-system-poc/README.md) | Real messaging-system concerns: queueing, provider routing, delivery semantics, and rate limits. |
 | [subscription-billing-reminder-poc](subscription-billing-reminder-poc/README.md) | Practical recurring billing workflow with subscriptions, invoices, payment attempts, dunning retries, reminders, grace periods, and cancellations. |
 | [appointment-scheduling-reminder-poc](appointment-scheduling-reminder-poc/README.md) | Everyday scheduling with availability, expiring holds, conflict-safe booking, rescheduling, waitlist promotion, reminders, and utilization. |
+| [smart-daily-planner-reminder-poc](smart-daily-planner-reminder-poc/README.md) | React, Node, Express, SQLite, and Redis-style daily planner with auto-scheduling, overload detection, idempotent task intake, reminder retries, and audits. |
 | [shared-expense-splitting-poc](shared-expense-splitting-poc/README.md) | React, Node, and Express shared-expense ledger with multiple split methods, multi-payer expenses, reversals, settlements, recurring costs, and reminders. |
 | [home-maintenance-reminder-poc](home-maintenance-reminder-poc/README.md) | React, Node, and Express home maintenance tracker with recurring schedules, warranties, service history, reminders, asset health, and spending. |
 | [package-delivery-tracker-poc](package-delivery-tracker-poc/README.md) | React, Node, Express, and Redis parcel tracker with carrier normalization, idempotent event ingestion, out-of-order protection, polling, and delivery alerts. |
@@ -266,6 +267,7 @@ This path moves from core primitives to more layered systems.
 - [personal-sleep-recovery-tracker-poc](personal-sleep-recovery-tracker-poc/README.md)
 - [pet-care-coordination-poc](pet-care-coordination-poc/README.md)
 - [rental-lease-tenant-tracker-poc](rental-lease-tenant-tracker-poc/README.md)
+- [smart-daily-planner-reminder-poc](smart-daily-planner-reminder-poc/README.md)
 - [smart-home-automation-rules-poc](smart-home-automation-rules-poc/README.md)
 - [smart-pantry-inventory-poc](smart-pantry-inventory-poc/README.md)
 - [strava-poc](strava-poc/README.md)
@@ -287,8 +289,8 @@ For the strongest review signal, open files in this order:
 
 The repository direction is to make every project easy to scan in under two minutes and deep enough to discuss in an interview or portfolio review.
 
-- `134/134` POCs have a `README.md`
-- `134/134` POCs have a technical companion doc
-- `125/134` POCs have an `IMPROVEMENTS.md`
+- `135/135` POCs have a `README.md`
+- `135/135` POCs have a technical companion doc
+- `126/135` POCs have an `IMPROVEMENTS.md`
 
 Use [POC_STANDARDS.md](POC_STANDARDS.md) as the baseline for future additions and cleanup.
