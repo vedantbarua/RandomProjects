@@ -1,0 +1,424 @@
+:root {
+  color: #172025;
+  background: #eef2f4;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding-bottom: 32px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(16px, 4vw, 58px);
+  border-bottom: 1px solid #d5e0e4;
+  background: rgba(250, 252, 253, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.brand,
+.top-actions,
+.hero-card,
+.metric,
+.panel-head,
+.control-row,
+.claim-card,
+.item-list article,
+.job-list article,
+.doc-list article {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #fff;
+  background: #2c5364;
+}
+
+.brand div,
+.form-panel,
+.form-panel label,
+.claims-panel,
+.side-panel,
+.claim-list,
+.expiry-list,
+.doc-list,
+.item-list,
+.job-list,
+.contact-list,
+.audit-list {
+  display: grid;
+  gap: 10px;
+}
+
+small,
+.muted,
+.claim-card span,
+.claim-card small,
+.expiry-list span,
+.expiry-list small,
+.item-list span,
+.item-list small,
+.job-list small,
+.contact-list span,
+.contact-list small,
+.audit-list span,
+.audit-list small {
+  color: #667981;
+}
+
+button,
+select {
+  min-height: 38px;
+  border: 1px solid #c8d9de;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #24434a;
+  background: #ffffff;
+}
+
+.top-actions,
+.control-row {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.top-actions button,
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hero,
+.metrics,
+.workspace,
+.lower-grid {
+  width: min(1500px, calc(100% - 32px));
+  margin: 20px auto 0;
+}
+
+.hero {
+  min-height: 330px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: center;
+  gap: 22px;
+  padding: 28px;
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  background: linear-gradient(120deg, rgba(250, 252, 253, 0.96), rgba(235, 241, 243, 0.82)), url("https://images.unsplash.com/photo-1581091215367-59ab6b0b9795?auto=format&fit=crop&w=1800&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #2c5364;
+  background: #e0edf1;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+h1 {
+  max-width: 840px;
+  margin-top: 16px;
+  font-size: clamp(38px, 6vw, 72px);
+  line-height: 0.98;
+}
+
+.hero p {
+  max-width: 650px;
+  margin-top: 16px;
+  color: #4d626a;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.hero-card {
+  min-height: 176px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.hero-card strong {
+  font-size: 56px;
+}
+
+.hero-card meter {
+  width: 100%;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric {
+  min-height: 108px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 18px;
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.metric svg {
+  color: #2c5364;
+}
+
+.metric strong {
+  font-size: 32px;
+}
+
+.metric.ok svg {
+  color: #2d744e;
+}
+
+.metric.warn svg {
+  color: #9a551e;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 340px minmax(0, 1fr) 330px;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  padding: 18px;
+  background: #ffffff;
+}
+
+.panel h2,
+.panel-head {
+  color: #2c5364;
+}
+
+.panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 20px;
+}
+
+.form-panel input,
+.form-panel select,
+.claim-card select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #cbd9de;
+  border-radius: 8px;
+  padding: 0 10px;
+  color: #172025;
+  background: #f7fafb;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.primary {
+  color: #ffffff;
+  border-color: #2c5364;
+  background: #2c5364;
+}
+
+.panel-head {
+  justify-content: space-between;
+}
+
+.claim-card,
+.item-list article,
+.job-list article,
+.expiry-list article,
+.contact-list article,
+.audit-list article {
+  padding: 12px;
+  border: 1px solid #dfe8eb;
+  border-radius: 8px;
+  background: #f7fafb;
+}
+
+.claim-card {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.claim-card > div,
+.item-list div,
+.job-list div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.claim-card select {
+  width: 148px;
+}
+
+.expiry-list article.expired {
+  border-color: #efc99f;
+  background: #fff6ec;
+}
+
+.doc-list article {
+  justify-content: space-between;
+  padding: 10px;
+  border: 1px solid #efc99f;
+  border-radius: 8px;
+  color: #6e3e14;
+  background: #fff6ec;
+}
+
+.lower-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.item-list article {
+  justify-content: space-between;
+}
+
+.job-list article {
+  align-items: flex-start;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 5px;
+  border-radius: 999px;
+  background: #8a9aa0;
+}
+
+.dot.queued {
+  background: #2f6972;
+}
+
+.dot.dispatched {
+  background: #2d744e;
+}
+
+.dot.cancelled {
+  background: #9b5858;
+}
+
+.contact-list,
+.audit-list {
+  max-height: 420px;
+  overflow: auto;
+}
+
+.contact-list article,
+.audit-list article {
+  display: grid;
+  gap: 3px;
+}
+
+@media (max-width: 1180px) {
+  .hero,
+  .metrics,
+  .workspace,
+  .lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar,
+  .claim-card,
+  .item-list article {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .top-actions,
+  .panel-head,
+  .control-row {
+    justify-content: flex-start;
+  }
+
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .claim-card select {
+    width: 100%;
+  }
+}
