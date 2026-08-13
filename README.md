@@ -2,7 +2,7 @@
 
 Proof-of-concepts for distributed systems, infrastructure patterns, and product-style architectures. This repository is meant to read like a working systems portfolio, not just a list of folders.
 
-There are currently `136` POCs here. Some are infrastructure primitives, some are realtime systems, and some are end-user product simulations. The common goal is the same: make the underlying system behavior visible enough that someone can understand the design tradeoffs quickly.
+There are currently `137` POCs here. Some are infrastructure primitives, some are realtime systems, and some are end-user product simulations. The common goal is the same: make the underlying system behavior visible enough that someone can understand the design tradeoffs quickly.
 
 ## What Makes This Repo Useful
 
@@ -59,6 +59,7 @@ If a reviewer only opens a dozen projects, these are the best entry points.
 | [smart-daily-planner-reminder-poc](smart-daily-planner-reminder-poc/README.md) | React, Node, Express, SQLite, and Redis-style daily planner with auto-scheduling, overload detection, idempotent task intake, reminder retries, and audits. |
 | [shared-expense-splitting-poc](shared-expense-splitting-poc/README.md) | React, Node, and Express shared-expense ledger with multiple split methods, multi-payer expenses, reversals, settlements, recurring costs, and reminders. |
 | [home-maintenance-reminder-poc](home-maintenance-reminder-poc/README.md) | React, Node, and Express home maintenance tracker with recurring schedules, warranties, service history, reminders, asset health, and spending. |
+| [personal-warranty-service-claim-assistant-poc](personal-warranty-service-claim-assistant-poc/README.md) | React, Node, Express, SQLite, and Redis-style warranty assistant with expiry detection, claim workflows, document checklists, follow-up retries, and audits. |
 | [package-delivery-tracker-poc](package-delivery-tracker-poc/README.md) | React, Node, Express, and Redis parcel tracker with carrier normalization, idempotent event ingestion, out-of-order protection, polling, and delivery alerts. |
 | [returns-refunds-tracker-poc](returns-refunds-tracker-poc/README.md) | React, Node, PostgreSQL, and Redis return workflow with deadlines, reverse logistics, provider webhooks, partial refunds, and financial reconciliation. |
 | [personal-document-renewal-vault-poc](personal-document-renewal-vault-poc/README.md) | React and FastAPI document vault with short-lived grants, immutable versions, MinIO objects, scan/OCR jobs, access controls, audits, and renewal reminders. |
@@ -266,6 +267,7 @@ This path moves from core primitives to more layered systems.
 - [personal-tax-document-organizer-poc](personal-tax-document-organizer-poc/README.md)
 - [personal-transaction-fraud-watch-poc](personal-transaction-fraud-watch-poc/README.md)
 - [personal-travel-itinerary-poc](personal-travel-itinerary-poc/README.md)
+- [personal-warranty-service-claim-assistant-poc](personal-warranty-service-claim-assistant-poc/README.md)
 - [personal-sleep-recovery-tracker-poc](personal-sleep-recovery-tracker-poc/README.md)
 - [pet-care-coordination-poc](pet-care-coordination-poc/README.md)
 - [rental-lease-tenant-tracker-poc](rental-lease-tenant-tracker-poc/README.md)
@@ -291,8 +293,8 @@ For the strongest review signal, open files in this order:
 
 The repository direction is to make every project easy to scan in under two minutes and deep enough to discuss in an interview or portfolio review.
 
-- `136/136` POCs have a `README.md`
-- `136/136` POCs have a technical companion doc
-- `127/136` POCs have an `IMPROVEMENTS.md`
+- `137/137` POCs have a `README.md`
+- `137/137` POCs have a technical companion doc
+- `128/137` POCs have an `IMPROVEMENTS.md`
 
 Use [POC_STANDARDS.md](POC_STANDARDS.md) as the baseline for future additions and cleanup.
