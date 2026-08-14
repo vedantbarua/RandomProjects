@@ -1,0 +1,410 @@
+:root {
+  color: #172024;
+  background: #edf2f4;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+select {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+  letter-spacing: 0;
+}
+
+.app-shell {
+  min-height: 100vh;
+  padding-bottom: 32px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px clamp(16px, 4vw, 58px);
+  border-bottom: 1px solid #d5e0e4;
+  background: rgba(250, 252, 253, 0.94);
+  backdrop-filter: blur(12px);
+}
+
+.brand,
+.top-actions,
+.hero-card,
+.metric,
+.panel-head,
+.control-row,
+.alert-card,
+.job-list article {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand > span {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  color: #fff;
+  background: #2f5460;
+}
+
+.brand div,
+.form-panel,
+.form-panel label,
+.side-panel,
+.side-panel label,
+.alerts-panel,
+.alert-list,
+.item-list,
+.recall-list,
+.job-list,
+.audit-list {
+  display: grid;
+  gap: 10px;
+}
+
+small,
+.alert-card span,
+.alert-card small,
+.item-list span,
+.item-list small,
+.recall-list span,
+.recall-list small,
+.job-list small,
+.audit-list span,
+.audit-list small {
+  color: #657980;
+}
+
+button,
+select {
+  min-height: 38px;
+  border: 1px solid #c8d9de;
+  border-radius: 8px;
+  padding: 0 12px;
+  color: #24434a;
+  background: #ffffff;
+}
+
+.top-actions,
+.control-row {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.top-actions button,
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.hero,
+.metrics,
+.workspace,
+.lower-grid {
+  width: min(1500px, calc(100% - 32px));
+  margin: 20px auto 0;
+}
+
+.hero {
+  min-height: 330px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: center;
+  gap: 22px;
+  padding: 28px;
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  background: linear-gradient(120deg, rgba(250, 252, 253, 0.96), rgba(235, 241, 243, 0.82)), url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1800&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: #2f5460;
+  background: #e0edf1;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+h1 {
+  max-width: 840px;
+  margin-top: 16px;
+  font-size: clamp(38px, 6vw, 72px);
+  line-height: 0.98;
+}
+
+.hero p {
+  max-width: 650px;
+  margin-top: 16px;
+  color: #4d626a;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.hero-card {
+  min-height: 176px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px;
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.hero-card strong {
+  font-size: 56px;
+}
+
+.hero-card meter {
+  width: 100%;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric {
+  min-height: 108px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 18px;
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.metric svg {
+  color: #2f5460;
+}
+
+.metric strong {
+  font-size: 32px;
+}
+
+.metric.ok svg {
+  color: #2d744e;
+}
+
+.metric.warn svg {
+  color: #9a551e;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: 330px minmax(0, 1fr) 340px;
+  gap: 16px;
+  align-items: start;
+}
+
+.panel {
+  border: 1px solid #d5e0e4;
+  border-radius: 8px;
+  padding: 18px;
+  background: #ffffff;
+}
+
+.panel h2,
+.panel-head {
+  color: #2f5460;
+}
+
+.panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 20px;
+}
+
+.form-panel input,
+.form-panel select,
+.side-panel input,
+.side-panel select,
+.alert-card select {
+  width: 100%;
+  min-height: 40px;
+  border: 1px solid #cbd9de;
+  border-radius: 8px;
+  padding: 0 10px;
+  color: #172024;
+  background: #f7fafb;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.primary {
+  color: #ffffff;
+  border-color: #2f5460;
+  background: #2f5460;
+}
+
+.panel-head {
+  justify-content: space-between;
+}
+
+.alert-card,
+.item-list article,
+.recall-list article,
+.job-list article,
+.audit-list article {
+  padding: 12px;
+  border: 1px solid #dfe8eb;
+  border-radius: 8px;
+  background: #f7fafb;
+}
+
+.alert-card {
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.alert-card.critical {
+  border-color: #e9b1a9;
+  background: #fff0ee;
+}
+
+.alert-card.high {
+  border-color: #efc99f;
+  background: #fff6ec;
+}
+
+.alert-card > div,
+.job-list div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+
+.alert-card select {
+  width: 150px;
+}
+
+.lower-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.item-list article,
+.recall-list article,
+.audit-list article {
+  display: grid;
+  gap: 4px;
+}
+
+.job-list article {
+  align-items: flex-start;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  margin-top: 5px;
+  border-radius: 999px;
+  background: #8a9aa0;
+}
+
+.dot.queued {
+  background: #2f6972;
+}
+
+.dot.dispatched {
+  background: #2d744e;
+}
+
+.dot.cancelled {
+  background: #9b5858;
+}
+
+.audit-list,
+.job-list {
+  max-height: 420px;
+  overflow: auto;
+}
+
+@media (max-width: 1180px) {
+  .hero,
+  .metrics,
+  .workspace,
+  .lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar,
+  .alert-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .top-actions,
+  .panel-head,
+  .control-row {
+    justify-content: flex-start;
+  }
+
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .alert-card select {
+    width: 100%;
+  }
+}
